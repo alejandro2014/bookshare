@@ -1,21 +1,19 @@
 package org.bookshare.api.controllers;
 
 import org.bookshare.api.model.Author;
-import org.bookshare.api.repositories.AuthorRepository;
 import org.bookshare.api.services.AuthorService;
-
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = {AuthorService.class})
-@RunWith(MockitoJUnitRunner.class)
 public class AuthorControllerTests {
 
     @Mock
@@ -24,10 +22,20 @@ public class AuthorControllerTests {
     @InjectMocks
     private AuthorController authorController;
 
+    private MockMvc mockMvc;
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(authorController)
+                .build();
+    }
+
     @Test
-    public void theControllerGetsAnExistentAuthor() {
-        final String AUTHOR_NAME = "Miguel";
-        final String AUTHOR_SURNAME = "De Unamuno";
+    public void theControllerGetsAnExistentAuthor() throws Exception {
+        final String AUTHOR_NAME = "miguel";
+        final String AUTHOR_SURNAME = "delibes";
 
         // given
         Author author = Author.builder()
@@ -38,10 +46,9 @@ public class AuthorControllerTests {
         when(authorService.getAuthor(AUTHOR_NAME, AUTHOR_SURNAME)).thenReturn(author);
 
         // when
-        Author returnedAuthor = authorController.getAuthor(AUTHOR_NAME, AUTHOR_SURNAME);
-        
-        // then
-        assertEquals(AUTHOR_NAME, returnedAuthor.getName());
-        assertEquals(AUTHOR_SURNAME, returnedAuthor.getSurname());
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/author/delibes/miguel")
+                .content("application/json"))
+                .andExpect(status().isOk());
     }
 }
