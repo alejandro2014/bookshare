@@ -3,7 +3,8 @@ package org.bookshare.api.controllers;
 import org.bookshare.api.model.Author;
 import org.bookshare.api.repositories.AuthorRepository;
 import org.bookshare.api.services.AuthorService;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,19 +26,22 @@ public class AuthorControllerTests {
 
     @Test
     public void theControllerGetsAnExistentAuthor() {
+        final String AUTHOR_NAME = "Miguel";
+        final String AUTHOR_SURNAME = "De Unamuno";
+
         // given
         Author author = Author.builder()
-                .name("Miguel")
-                .surname("De Unamuno")
+                .name(AUTHOR_NAME)
+                .surname(AUTHOR_SURNAME)
                 .build();
 
-        when(authorService.getAuthor("Miguel", "De Unamuno")).thenReturn(author);
+        when(authorService.getAuthor(AUTHOR_NAME, AUTHOR_SURNAME)).thenReturn(author);
 
         // when
-        Author returnedAuthor = authorController.getAuthor("Miguel", "De Unamuno");
+        Author returnedAuthor = authorController.getAuthor(AUTHOR_NAME, AUTHOR_SURNAME);
         
         // then
-        assertEquals("Miguel", returnedAuthor.getName());
-        assertEquals("De Unamuno", returnedAuthor.getSurname());
+        assertEquals(AUTHOR_NAME, returnedAuthor.getName());
+        assertEquals(AUTHOR_SURNAME, returnedAuthor.getSurname());
     }
 }
