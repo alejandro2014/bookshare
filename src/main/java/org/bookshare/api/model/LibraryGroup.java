@@ -1,4 +1,4 @@
-package org.bookshare.api.entities;
+package org.bookshare.api.model;
 
 import lombok.Data;
 

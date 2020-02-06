@@ -1,13 +1,11 @@
 package org.bookshare.api.services;
 
-import org.bookshare.api.entities.Book;
-import org.bookshare.api.entities.Library;
+import org.bookshare.api.model.Book;
 import org.bookshare.api.repositories.BooksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -17,7 +15,7 @@ public class BookService {
     private BooksRepository booksRepository;
 
     public Set<Book> getBooksFromPersonId(Integer personId) {
-        return booksRepository.findById(personId);
+        //return booksRepository.findById(personId);
         /*//TODO Extract authors to a new table
         Book book1 = Book.builder().author("Fedor Dostoievsky").title("Los hermanos Karamazov").build();
         Book book2 = Book.builder().author("William Shakespeare").title("Hamlet").build();
@@ -32,9 +30,10 @@ public class BookService {
         library.setBooks(userBooks);
 
         return library;*/
+        return null;
     }
 
-    public void addBookToLibrary(Book book, Library library) {
-        library.addBook(book);
+    public void addBookToLibrary(Book book, String idLibrary) {
+        booksRepository.save(book);
     }
 }
