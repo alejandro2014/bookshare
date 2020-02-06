@@ -11,8 +11,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AuthorControllerTests {
 
@@ -34,21 +38,22 @@ public class AuthorControllerTests {
 
     @Test
     public void theControllerGetsAnExistentAuthor() throws Exception {
-        final String AUTHOR_NAME = "miguel";
-        final String AUTHOR_SURNAME = "delibes";
-
         // given
         Author author = Author.builder()
-                .name(AUTHOR_NAME)
-                .surname(AUTHOR_SURNAME)
+                .id(1)
+                .name("Miguel")
+                .surname("Delibes")
                 .build();
 
-        when(authorService.getAuthor(AUTHOR_NAME, AUTHOR_SURNAME)).thenReturn(author);
+        when(authorService.getAuthor("miguel", "delibes")).thenReturn(author);
 
         // when
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/author/delibes/miguel")
                 .content("application/json"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Miguel")))
+                .andExpect(jsonPath("$.surname", is("Delibes")));
     }
 }
